@@ -1,4 +1,4 @@
-const API_BASE = "https://your-backend-url.onrender.com"; 
+const API_BASE = "https://sentiment-backend-phbw.onrender.com"; 
 
 async function analyze() {
   const review = document.getElementById("review").value.trim();
