@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Review Sentiment Analyzer</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Review Sentiment Analyzer</h1>
+
+    <textarea id="review" placeholder="Enter a review..."></textarea>
+    <button onclick="analyze()">Analyze</button>
+
+    <p id="result"></p>
+
+    <div class="dashboard">
+      <h2>Dashboard</h2>
+      <div class="stats">
+        <p>Total Reviews: <span id="total">0</span></p>
+        <p>Positive: <span id="positive">0</span></p>
+        <p>Neutral: <span id="neutral">0</span></p>
+        <p>Negative: <span id="negative">0</span></p>
+      </div>
+      <canvas id="chart" width="400" height="200"></canvas>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
