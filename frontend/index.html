@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Review Sentiment Analyzer</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -18,15 +19,30 @@
     <div class="dashboard">
       <h2>Dashboard</h2>
       <div class="stats">
-        <p>Total Reviews: <span id="total">0</span></p>
-        <p>Positive: <span id="positive">0</span></p>
-        <p>Neutral: <span id="neutral">0</span></p>
-        <p>Negative: <span id="negative">0</span></p>
+        <div class="card positive">
+          <i class="fas fa-smile"></i>
+          <p>Total Reviews</p>
+          <div class="count" id="total">0</div>
+        </div>
+        <div class="card neutral">
+          <i class="fas fa-meh"></i>
+          <p>Positive</p>
+          <div class="count" id="positive">0</div>
+        </div>
+        <div class="card negative">
+          <i class="fas fa-frown"></i>
+          <p>Neutral</p>
+          <div class="count" id="neutral">0</div>
+        </div>
+        <div class="card negative">
+          <i class="fas fa-sad-tear"></i>
+          <p>Negative</p>
+          <div class="count" id="negative">0</div>
+        </div>
       </div>
       <canvas id="chart" width="400" height="200"></canvas>
     </div>
-  </div>
-
+    
   <script src="script.js"></script>
 </body>
 </html>
