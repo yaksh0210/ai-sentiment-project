@@ -82,23 +82,23 @@ async function loadStats() {
     });
 
     // Pie Chart
-    const pieCtx = document.getElementById("pieChart").getContext("2d");
-    if (window.myPieChart) window.myPieChart.destroy();
-    window.myPieChart = new Chart(pieCtx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Positive', 'Neutral', 'Negative'],
-        datasets: [{
-          data: [stats.positive, stats.neutral, stats.negative],
-          backgroundColor: ['#28a745', '#6c757d', '#dc3545']
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { position: 'bottom' } },
-        animation: { duration: 600 }
-      }
-    });
+    // const pieCtx = document.getElementById("pieChart").getContext("2d");
+    // if (window.myPieChart) window.myPieChart.destroy();
+    // window.myPieChart = new Chart(pieCtx, {
+    //   type: 'doughnut',
+    //   data: {
+    //     labels: ['Positive', 'Neutral', 'Negative'],
+    //     datasets: [{
+    //       data: [stats.positive, stats.neutral, stats.negative],
+    //       backgroundColor: ['#28a745', '#6c757d', '#dc3545']
+    //     }]
+    //   },
+    //   options: {
+    //     responsive: true,
+    //     plugins: { legend: { position: 'bottom' } },
+    //     animation: { duration: 600 }
+    //   }
+    // });
 
   } catch (error) {
     console.error("Failed to load stats", error);
