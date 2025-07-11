@@ -12,7 +12,7 @@ async function analyze() {
     return;
   }
 
-  // Disable button and show loader
+  // Disable analyze button and show loader while processing
   analyzeBtn.disabled = true;
   loader.style.display = "block";
   result.innerText = "";
@@ -32,8 +32,10 @@ async function analyze() {
       negative: "😢"
     };
 
+    // Show result with sentiment and emoji
     result.innerText = `Sentiment: ${data.sentiment.toUpperCase()} ${emoji[data.sentiment]}`;
 
+    // Reload stats and charts
     await loadStats();
 
   } catch (error) {
@@ -51,6 +53,7 @@ async function loadStats() {
     const res = await fetch(`${API_BASE}/stats`);
     const stats = await res.json();
 
+    // Update stats numbers
     document.getElementById("total").innerText = stats.total;
     document.getElementById("positive").innerText = stats.positive;
     document.getElementById("neutral").innerText = stats.neutral;
@@ -74,16 +77,14 @@ async function loadStats() {
         scales: {
           y: { beginAtZero: true }
         },
-        animation: {
-          duration: 600
-        }
+        animation: { duration: 600 }
       }
     });
 
     // Pie Chart
-    const pie = document.getElementById("pieChart").getContext("2d");
+    const pieCtx = document.getElementById("pieChart").getContext("2d");
     if (window.myPieChart) window.myPieChart.destroy();
-    window.myPieChart = new Chart(pie, {
+    window.myPieChart = new Chart(pieCtx, {
       type: 'doughnut',
       data: {
         labels: ['Positive', 'Neutral', 'Negative'],
@@ -94,12 +95,8 @@ async function loadStats() {
       },
       options: {
         responsive: true,
-        plugins: {
-          legend: { position: 'bottom' }
-        },
-        animation: {
-          duration: 600
-        }
+        plugins: { legend: { position: 'bottom' } },
+        animation: { duration: 600 }
       }
     });
 
