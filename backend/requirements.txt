@@ -4,3 +4,4 @@ textblob
 gunicorn
 python-dotenv
 nltk
+vaderSentiment

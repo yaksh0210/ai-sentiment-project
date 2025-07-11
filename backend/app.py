@@ -1,11 +1,14 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from textblob import TextBlob
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import os
 
 app = Flask(__name__)
 CORS(app)
 
+analyzer = SentimentIntensityAnalyzer()
+
+# In-memory storage for stats
 stats = {
     "positive": 0,
     "neutral": 0,
@@ -21,13 +24,14 @@ def home():
 def analyze():
     data = request.get_json()
     text = data.get("text", "")
-    blob = TextBlob(text)
-    polarity = blob.sentiment.polarity
 
-    if polarity > 0.1:
+    vs = analyzer.polarity_scores(text)
+    compound = vs['compound']
+
+    if compound >= 0.05:
         sentiment = "positive"
         stats["positive"] += 1
-    elif polarity < -0.1:
+    elif compound <= -0.05:
         sentiment = "negative"
         stats["negative"] += 1
     else:
