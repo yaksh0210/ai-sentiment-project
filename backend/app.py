@@ -1,20 +1,17 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from textblob import TextBlob
-from collections import defaultdict
-from datetime import datetime
 import os
 
 app = Flask(__name__)
 CORS(app)
 
-# In-memory storage
+# In-memory storage for stats
 stats = {
     "positive": 0,
     "neutral": 0,
     "negative": 0,
-    "total": 0,
-    "timeline": defaultdict(lambda: {"positive": 0, "neutral": 0, "negative": 0})
+    "total": 0
 }
 
 @app.route("/")
@@ -29,42 +26,21 @@ def analyze():
     polarity = blob.sentiment.polarity
 
     if polarity > 0.1:
-        sentiment = "positive"
+        sentiment = "Positive"
         stats["positive"] += 1
     elif polarity < -0.1:
-        sentiment = "negative"
+        sentiment = "Negative"
         stats["negative"] += 1
     else:
-        sentiment = "neutral"
+        sentiment = "Neutral"
         stats["neutral"] += 1
 
     stats["total"] += 1
-
-    # Track date-based timeline
-    today = datetime.utcnow().strftime("%Y-%m-%d")
-    stats["timeline"][today][sentiment] += 1
-
     return jsonify({"sentiment": sentiment})
 
 @app.route("/stats", methods=["GET"])
 def get_stats():
-    timeline_list = [
-        {
-            "date": date,
-            "positive": counts["positive"],
-            "neutral": counts["neutral"],
-            "negative": counts["negative"]
-        }
-        for date, counts in sorted(stats["timeline"].items())
-    ]
-
-    return jsonify({
-        "positive": stats["positive"],
-        "neutral": stats["neutral"],
-        "negative": stats["negative"],
-        "total": stats["total"],
-        "timeline": timeline_list
-    })
+    return jsonify(stats)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

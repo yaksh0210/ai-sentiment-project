@@ -1,4 +1,4 @@
-const API_BASE = "https://sentiment-backend-phbw.onrender.com"; // Or your local API if testing
+const API_BASE = "https://sentiment-backend-phbw.onrender.com";
 
 async function analyze() {
   const review = document.getElementById("review").value.trim();
@@ -7,6 +7,7 @@ async function analyze() {
     return;
   }
 
+  // Show loader
   document.getElementById("loader").style.display = "block";
   document.getElementById("result").innerText = "";
 
@@ -25,14 +26,14 @@ async function analyze() {
       negative: "😢"
     };
 
-    document.getElementById("result").innerText =
+    document.getElementById("result").innerText = 
       `Sentiment: ${result.sentiment.toUpperCase()} ${emoji[result.sentiment]}`;
 
     await loadStats();
 
   } catch (err) {
-    console.error("Error analyzing:", err);
-    document.getElementById("result").innerText = "An error occurred.";
+    document.getElementById("result").innerText = "Error analyzing review.";
+    console.error(err);
   }
 
   document.getElementById("loader").style.display = "none";
@@ -48,9 +49,9 @@ async function loadStats() {
   document.getElementById("negative").innerText = stats.negative;
 
   // Bar Chart
-  const barCtx = document.getElementById("chart").getContext("2d");
+  const ctx = document.getElementById("chart").getContext("2d");
   if (window.myChart) window.myChart.destroy();
-  window.myChart = new Chart(barCtx, {
+  window.myChart = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: ['Positive', 'Neutral', 'Negative'],
@@ -62,14 +63,16 @@ async function loadStats() {
     },
     options: {
       responsive: true,
-      scales: { y: { beginAtZero: true } }
+      scales: {
+        y: { beginAtZero: true }
+      }
     }
   });
 
   // Pie Chart
-  const pieCtx = document.getElementById("pieChart").getContext("2d");
+  const pie = document.getElementById("pieChart").getContext("2d");
   if (window.myPieChart) window.myPieChart.destroy();
-  window.myPieChart = new Chart(pieCtx, {
+  window.myPieChart = new Chart(pie, {
     type: 'doughnut',
     data: {
       labels: ['Positive', 'Neutral', 'Negative'],
@@ -85,56 +88,6 @@ async function loadStats() {
       }
     }
   });
-
-  // Line Chart (Timeline)
-  if (stats.timeline) {
-    const lineCtx = document.getElementById("lineChart").getContext("2d");
-    if (window.myLineChart) window.myLineChart.destroy();
-
-    const dates = stats.timeline.map(entry => entry.date);
-    const pos = stats.timeline.map(entry => entry.positive);
-    const neu = stats.timeline.map(entry => entry.neutral);
-    const neg = stats.timeline.map(entry => entry.negative);
-
-    window.myLineChart = new Chart(lineCtx, {
-      type: 'line',
-      data: {
-        labels: dates,
-        datasets: [
-          {
-            label: 'Positive',
-            data: pos,
-            borderColor: '#28a745',
-            fill: false,
-            tension: 0.3
-          },
-          {
-            label: 'Neutral',
-            data: neu,
-            borderColor: '#6c757d',
-            fill: false,
-            tension: 0.3
-          },
-          {
-            label: 'Negative',
-            data: neg,
-            borderColor: '#dc3545',
-            fill: false,
-            tension: 0.3
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { position: 'bottom' }
-        },
-        scales: {
-          y: { beginAtZero: true }
-        }
-      }
-    });
-  }
 }
 
 window.onload = loadStats;
