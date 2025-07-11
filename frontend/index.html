@@ -9,11 +9,12 @@
 </head>
 <body>
   <div class="container">
-    <h1>Sentiment Analyzer And Review Insights</h1>
+    <h1>Sentiment Analyzer & Dashboard</h1>
 
     <textarea id="review" placeholder="Enter your review..."></textarea>
     <button onclick="analyze()">Analyze</button>
 
+    <div id="loader" class="loader" style="display: none;"></div>
     <p id="result"></p>
 
     <div class="dashboard">
@@ -29,8 +30,8 @@
           <p>Positive</p>
           <div class="count" id="positive">0</div>
         </div>
-        <div class="card negative">
-          <i class="fas fa-frown"></i>
+        <div class="card neutral">
+          <i class="fas fa-meh"></i>
           <p>Neutral</p>
           <div class="count" id="neutral">0</div>
         </div>
@@ -40,9 +41,13 @@
           <div class="count" id="negative">0</div>
         </div>
       </div>
+
       <canvas id="chart" width="400" height="200"></canvas>
+      <canvas id="pieChart" width="400" height="200"></canvas>
     </div>
     
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>

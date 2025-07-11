@@ -168,3 +168,30 @@ canvas {
 .stats .negative .card i {
   color: #dc3545;
 }
+
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #2575fc;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  margin: 20px auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#result {
+  font-size: 22px;
+  margin-top: 20px;
+  font-weight: bold;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
