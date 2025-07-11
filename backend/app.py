@@ -6,7 +6,6 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# In-memory storage for stats
 stats = {
     "positive": 0,
     "neutral": 0,
@@ -26,13 +25,13 @@ def analyze():
     polarity = blob.sentiment.polarity
 
     if polarity > 0.1:
-        sentiment = "Positive"
+        sentiment = "positive"
         stats["positive"] += 1
     elif polarity < -0.1:
-        sentiment = "Negative"
+        sentiment = "negative"
         stats["negative"] += 1
     else:
-        sentiment = "Neutral"
+        sentiment = "neutral"
         stats["neutral"] += 1
 
     stats["total"] += 1

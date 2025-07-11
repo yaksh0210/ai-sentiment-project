@@ -1,15 +1,21 @@
 const API_BASE = "https://sentiment-backend-phbw.onrender.com";
 
 async function analyze() {
-  const review = document.getElementById("review").value.trim();
+  const reviewInput = document.getElementById("review");
+  const analyzeBtn = document.querySelector("button");
+  const loader = document.getElementById("loader");
+  const result = document.getElementById("result");
+
+  const review = reviewInput.value.trim();
   if (!review) {
     alert("Please enter a review.");
     return;
   }
 
-  // Show loader
-  document.getElementById("loader").style.display = "block";
-  document.getElementById("result").innerText = "";
+  // Disable button and show loader
+  analyzeBtn.disabled = true;
+  loader.style.display = "block";
+  result.innerText = "";
 
   try {
     const response = await fetch(`${API_BASE}/analyze`, {
@@ -18,7 +24,7 @@ async function analyze() {
       body: JSON.stringify({ text: review })
     });
 
-    const result = await response.json();
+    const data = await response.json();
 
     const emoji = {
       positive: "😊",
@@ -26,68 +32,80 @@ async function analyze() {
       negative: "😢"
     };
 
-    document.getElementById("result").innerText = 
-      `Sentiment: ${result.sentiment.toUpperCase()} ${emoji[result.sentiment]}`;
+    result.innerText = `Sentiment: ${data.sentiment.toUpperCase()} ${emoji[data.sentiment]}`;
 
     await loadStats();
 
-  } catch (err) {
-    document.getElementById("result").innerText = "Error analyzing review.";
-    console.error(err);
+  } catch (error) {
+    result.innerText = "Error analyzing review.";
+    console.error(error);
   }
 
-  document.getElementById("loader").style.display = "none";
+  // Re-enable button and hide loader
+  analyzeBtn.disabled = false;
+  loader.style.display = "none";
 }
 
 async function loadStats() {
-  const res = await fetch(`${API_BASE}/stats`);
-  const stats = await res.json();
+  try {
+    const res = await fetch(`${API_BASE}/stats`);
+    const stats = await res.json();
 
-  document.getElementById("total").innerText = stats.total;
-  document.getElementById("positive").innerText = stats.positive;
-  document.getElementById("neutral").innerText = stats.neutral;
-  document.getElementById("negative").innerText = stats.negative;
+    document.getElementById("total").innerText = stats.total;
+    document.getElementById("positive").innerText = stats.positive;
+    document.getElementById("neutral").innerText = stats.neutral;
+    document.getElementById("negative").innerText = stats.negative;
 
-  // Bar Chart
-  const ctx = document.getElementById("chart").getContext("2d");
-  if (window.myChart) window.myChart.destroy();
-  window.myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Positive', 'Neutral', 'Negative'],
-      datasets: [{
-        label: 'Review Counts',
-        data: [stats.positive, stats.neutral, stats.negative],
-        backgroundColor: ['#28a745', '#6c757d', '#dc3545']
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: { beginAtZero: true }
+    // Bar Chart
+    const ctx = document.getElementById("chart").getContext("2d");
+    if (window.myChart) window.myChart.destroy();
+    window.myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Positive', 'Neutral', 'Negative'],
+        datasets: [{
+          label: 'Review Counts',
+          data: [stats.positive, stats.neutral, stats.negative],
+          backgroundColor: ['#28a745', '#6c757d', '#dc3545']
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        },
+        animation: {
+          duration: 600
+        }
       }
-    }
-  });
+    });
 
-  // Pie Chart
-  const pie = document.getElementById("pieChart").getContext("2d");
-  if (window.myPieChart) window.myPieChart.destroy();
-  window.myPieChart = new Chart(pie, {
-    type: 'doughnut',
-    data: {
-      labels: ['Positive', 'Neutral', 'Negative'],
-      datasets: [{
-        data: [stats.positive, stats.neutral, stats.negative],
-        backgroundColor: ['#28a745', '#6c757d', '#dc3545']
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { position: 'bottom' }
+    // Pie Chart
+    const pie = document.getElementById("pieChart").getContext("2d");
+    if (window.myPieChart) window.myPieChart.destroy();
+    window.myPieChart = new Chart(pie, {
+      type: 'doughnut',
+      data: {
+        labels: ['Positive', 'Neutral', 'Negative'],
+        datasets: [{
+          data: [stats.positive, stats.neutral, stats.negative],
+          backgroundColor: ['#28a745', '#6c757d', '#dc3545']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' }
+        },
+        animation: {
+          duration: 600
+        }
       }
-    }
-  });
+    });
+
+  } catch (error) {
+    console.error("Failed to load stats", error);
+  }
 }
 
 window.onload = loadStats;
